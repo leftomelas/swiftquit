@@ -84,10 +84,18 @@ class SwiftQuit {
     
     class func closeApplication(pid:Int32, eventApp:Swindler.Application) {
         let myAppPid = ProcessInfo.processInfo.processIdentifier
-        
-        let app = AppKit.NSRunningApplication.init(processIdentifier: pid)!
-        var applicationName = app.bundleURL!.absoluteString
-        
+
+        guard let app = AppKit.NSRunningApplication.init(processIdentifier: pid) else {
+            print("Application with PID \(pid) no longer running")
+            return
+        }
+
+        guard let bundleURL = app.bundleURL else {
+            print("Application with PID \(pid) has no bundle URL")
+            return
+        }
+        var applicationName = bundleURL.absoluteString
+
         print(app.isFinishedLaunching);
         
         if(app.isFinishedLaunching){
